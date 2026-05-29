@@ -1,0 +1,152 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Untuk Kamu yang Paling Spesial ❤️</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+    <div class="music-controller" onclick="toggleMusic()">
+        <span class="heart-beat-icon" id="musicIcon">🎵</span>
+        <span id="musicStatus">Musik: Off</span>
+    </div>
+
+    <img src="https://media.tenor.com/t79Kip54zXQAAAAi/mochi-peach.gif" class="floating-pet" alt="Cute Pet">
+
+    <div id="starsContainer" style="position: absolute; width:100%; height:100%; pointer-events:none; z-index:0;"></div>
+
+    <div id="youtubePlayer" style="display:none;"></div>
+    
+    <audio id="soundSfx"><source src="https://assets.mixkit.co/active_storage/sfx/2568/2568-200.mp3" type="audio/mpeg"></audio>
+    <audio id="cheerSfx"><source src="https://assets.mixkit.co/active_storage/sfx/1435/1435-200.mp3" type="audio/mpeg"></audio>
+
+    <div class="envelope-wrapper" id="envelopeScreen" onclick="bukaSurat()">
+        <div class="envelope">✉️</div>
+        <div style="color: #ff4d6d; font-weight: bold; margin-top: 12px; text-shadow: 0 2px 8px rgba(255,77,109,0.3); font-size: 1.05rem;">Klik surat ini ya sayang ✨</div>
+    </div>
+
+    <div class="container hidden" id="knockCard">
+        <div class="gif-container"><img src="https://media.tenor.com/t79Kip54zXQAAAAi/mochi-peach.gif"></div>
+        <h2>Tok Tok Tok! 🚪</h2>
+        <p style="color: #4a4a4a; font-size: 0.95rem; margin-bottom: 5px;" id="knockInstruction">Ketok pintu hati aku dulu sebanyak 5 kali buat masuk!</p>
+        <div class="knock-progress-bg"><div class="knock-progress-fill" id="knockFill"></div></div>
+        <button class="btn-next" style="margin-top: 18px;" id="btnKnock" onclick="ketokPintu()">KETOK! ✊</button>
+    </div>
+
+    <div class="container hidden" id="passwordCard">
+        <div class="gif-container" id="passGif"><img src="https://media.tenor.com/Z8Nbe9V5f8AAAAAi/cute-cat.gif"></div>
+        <h2>Eitss, Suratnya Dikunci! 🔐</h2>
+        <p style="color: #4a4a4a; font-size: 0.95rem; margin-bottom: 15px;">Masukkan 4 digit kode rahasia kita (Petunjuk: 1207):</p>
+        <input type="password" id="secretPin" placeholder="PIN Rahasia..." maxlength="4" style="width: 80%; padding: 12px; border-radius: 12px; border: 2px solid #ffb6c1; text-align: center; font-size: 1.2rem; outline: none; margin-bottom: 15px; letter-spacing: 5px;">
+        <button class="btn-next" onclick="verifyPassword()">Buka Kunci 💞</button>
+    </div>
+
+    <div class="container hidden" id="gameCard">
+        <div class="gif-container"><img src="https://media.tenor.com/w9UIdSg0f_0AAAAi/mochi-mochi-peach-cat-cat.gif"></div>
+        <h2>🎮 Mini Game Lucu!</h2>
+        <p style="color: #4a4a4a; font-size: 0.95rem; margin-bottom: 12px;" id="gameInstruction">Coba tebak, di mana rasa sayangku yang paling besar tersembunyi?</p>
+        <div class="game-buttons">
+            <button class="btn-game" id="gameBtn1" onmouseover="swapGameButtons()" onclick="playGame(1)">Kiri 👈</button>
+            <button class="btn-game" id="gameBtn2" onmouseover="swapGameButtons()" onclick="playGame(2)">Kanan 👉</button>
+        </div>
+    </div>
+
+    <div class="modal-overlay hidden" id="customModal">
+        <div class="modal-box">
+            <img src="https://media.tenor.com/Z8Nbe9V5f8AAAAAi/cute-cat.gif" id="modalGif" alt="Modal GIF">
+            <h3 id="modalText">Kenalan Dulu Dong ✨</h3>
+            <input type="text" id="inputNamaPanggilan" placeholder="Ketik nama panggilan kamu..." autocomplete="off" oninput="deteksiNamaBohong(this)">
+            <button class="modal-btn" id="modalBtn" onclick="submitNama()">Lanjuttt 💞</button>
+        </div>
+    </div>
+
+    <div class="container hidden" id="mainCard">
+        <div class="gif-container" id="mainGif"><img src="https://media.tenor.com/w9UIdSg0f_0AAAAi/mochi-mochi-peach-cat-cat.gif"></div>
+        <h1 id="sapaan">Hai Sayang... ✨</h1>
+        <p class="typing-text" id="typewriter"></p>
+        
+        <div id="isengComment" class="iseng-text hidden">Sstt.. pilih yang kiri aja! 😉</div>
+        
+        <div id="actions" class="hidden btn-group">
+            <button id="btnMau" onclick="terimaCinta(event)">Mau! ❤️</button>
+            <button id="btnGamau" onmouseover="pindahTombol()" onclick="pindahTombol()">Enggak 😜</button>
+        </div>
+        <button id="btnSogokan" class="btn-bribe hidden" onclick="terimaSogokan()">🎁 Klik disini jika kamu mau disogok boba/seblak!</button>
+    </div>
+
+    <div class="container hidden" id="quizCard">
+        <div class="gif-container"><img src="https://media.tenor.com/Y-98N7p7v28AAAAi/cute-cat.gif"></div>
+        <h2>Pertanyaan Kejujuran 🤔</h2>
+        <p style="color: #4a4a4a; font-size: 0.95rem; margin-bottom: 15px;" id="quizQuestion">Kalau lagi marahan, siapa yang paling sering gengsi minta maaf duluan?</p>
+        <div style="display:flex; flex-direction:column; gap:10px;">
+            <button class="btn-game" onclick="jawabQuiz(1)">Aku lah (Kan aku lucu) 🥺</button>
+            <button class="btn-game" onclick="jawabQuiz(2)">Kamu! (Gengsian bgt idih) 😜</button>
+        </div>
+    </div>
+
+    <div class="container hidden" id="scanCard" style="overflow: hidden;">
+        <div class="scanner-line"></div>
+        <div class="gif-container"><img src="https://media.tenor.com/E8N9vW_B_8AAAAAi/cute-cat-loading.gif"></div>
+        <h2>Mengaktifkan Kamera Depan... 📸</h2>
+        <p style="color: #4a4a4a; font-size: 0.95rem; margin-top: 10px;" id="scanStatus">Memindai tingkat kemerahan pipi kamu saat ini...</p>
+    </div>
+
+    <div class="container hidden" id="fingerprintCard">
+        <div class="gif-container"><img src="https://media.tenor.com/w9UIdSg0f_0AAAAi/mochi-mochi-peach-cat-cat.gif"></div>
+        <h2>Aura Keikhlasan Reader 🎯</h2>
+        <p style="color: #4a4a4a; font-size: 0.95rem;">Tekan dan Tahan tombol sidik jari di bawah selama 3 detik untuk cek kadar keikhlasan kamu nerima aku apa adanya!</p>
+        <div class="fingerprint-btn" id="fingerBtn" onmousedown="startScanFinger()" onmouseup="stopScanFinger()" ontouchstart="startScanFinger()" ontouchend="stopScanFinger()"><span>👆</span></div>
+        <p id="fingerStatus" style="color: #ff4d6d; font-weight: bold; font-size: 0.9rem; margin-top: 10px;">Status: Menunggu sidik jari...</p>
+    </div>
+
+    <div class="container hidden" id="meterCard">
+        <div class="gif-container"><img src="https://media.tenor.com/g9VvO_ub70gAAAAi/love-love-you.gif"></div>
+        <h2>Uji Kadar Kangen 💓</h2>
+        <p style="color: #4a4a4a; font-size: 0.95rem; margin-bottom: 15px;">Geser slider ke kanan buat buktiin seberapa kangen kamu hari ini!</p>
+        <div class="meter-container">
+            <span class="meter-label" id="sliderVal">Kangen: 50% (Biasa aja) 🤔</span>
+            <input type="range" min="1" max="100" value="50" class="love-slider" id="loveSlider" oninput="updateMeter(this.value)">
+        </div>
+        <button class="btn-next hidden" style="margin-top: 20px;" id="btnMeterNext" onclick="bukaHalamanSukses()">Kirim Jawaban & Lihat Timer 🗓️</button>
+    </div>
+
+    <div class="container container-funny hidden" id="funnyCard">
+        <div class="funny-layout">
+            <img src="https://media.tenor.com/7S8Yx1pcc2gAAAAi/funny-cat.gif" id="fotoLucu" alt="Foto Lucu">
+            <div class="funny-text">
+                <h2 id="funnyTitle">Detik-detik Kamu Salting... 🤭</h2>
+                <p id="funnyDesc">Tuh kan mukanya langsung berubah jadi gemes gini pas klik "Mau". Pokoknya gak boleh nyesel ya, kamu udah resmi jadi milik aku selamanya! bwahaha 🤪❤️</p>
+                <button class="btn-next" onclick="bukaPrankScanner()">Lanjut Cek Kamera 📸</button>
+            </div>
+        </div>
+    </div>
+
+    <div class="container hidden" id="successCard">
+        <div class="gif-container"><img src="https://media.tenor.com/g9VvO_ub70gAAAAi/love-love-you.gif"></div>
+        <h2>Yeayyy! I Love You! 💖</h2>
+        <p style="margin: 10px 0; font-size: 0.95rem;">Kita sudah bareng-bareng selama:</p>
+        <div class="timer-box" id="loveTimer">Loading...</div>
+        
+        <div class="wishlist-box">
+            <h4>📌 Our Next Date Agenda:</h4>
+            <div class="wishlist-item"><input type="checkbox" checked disabled> <span>Ngasih web kejutan lucu ini (Done!)</span></div>
+            <div class="wishlist-item"><input type="checkbox" id="w2" onclick="saveWish(2)"> <span>Makan seblak + boba bareng 🧋</span></div>
+            <div class="wishlist-item"><input type="checkbox" id="w3" onclick="saveWish(3)"> <span>Nonton film marathon seharian 🍿</span></div>
+            <div class="wishlist-item"><input type="checkbox" id="w4" onclick="saveWish(4)"> <span>Keliling kota malem-malem gak jelas 🏍️</span></div>
+        </div>
+
+        <div class="coupon-container">
+            <span class="coupon-title">🎁 Kupon Manja Spesial Buat Kamu:</span>
+            <div class="coupon-card" id="kuponDigital" onclick="klaimKupon(event)">Klik untuk Acak Kupon ✨</div>
+        </div>
+
+        <button class="btn-surprise" onclick="kasihKejutan()">Klik ini kalau kamu kangen aku! 💌</button>
+    </div>
+
+    <div class="floating-letter hidden" id="floatingSurat" onclick="bukaSuratRahasia(event)">💌</div>
+
+    <script src="script.js"></script>
+</body>
+</html>
